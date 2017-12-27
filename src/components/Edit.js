@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import ConfirmModal from './subcomponents/ConfirmModal';
 
 // import axios
-
+import axios from 'axios';
 
 class Edit extends Component {
     constructor(){
@@ -19,13 +19,37 @@ class Edit extends Component {
     }
 
     // insert componentWillMount
-
+    componentWillMount(){
+        axios.get(`/api/blog/${this.props.match.params.id}`).then(res=>{
+            this.setState({
+                title: res.data,
+                subTitle:res.data,
+                image:res.data,
+                text:res.data,
+                confirm:res.data
+            })
+        }).catch(console.log(`err`))
+    }
     
     // insert updatePost 
-    
+    updatePost(){
+        var body= {
+            title: this.state.title,
+            subTitle: this.state.subTitle,
+            image: this.state.image,
+            text: this.state.text
+        }
+        axios.post(`/api/blog/${this.props.match.params.id}`, body).then(res=>{
+            this.props.history.push(`/blog/${res.data.id}`)
+        }).catch(console.log(`err`))
+    }
 
     // Insert into the deletePost 
-
+    deletePost(){
+        axios.delete(`/api/blog/${this.props.match.params.id}`).then(res=>{
+            this.props.history.push(`/blog/${res.data.id}`)
+        }).catch(console.log(`err`))
+    }
     
     render() {
         let {title, subTitle, image, text} = this.state;
